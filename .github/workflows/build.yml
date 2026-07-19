@@ -1,0 +1,19 @@
+name: Build
+on:
+  push:
+    branches: [feat/build-linux]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - run: CGO_ENABLED=0 go build -ldflags '-s -w' -o reasonix ./cmd/reasonix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reasonix-linux-amd64
+          path: reasonix
